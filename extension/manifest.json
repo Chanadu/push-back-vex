@@ -1,10 +1,20 @@
 {
-  "name": "path.jerryio-to-ez-template",
-  "description": "",
-  "version": "1.0",
   "manifest_version": 3,
+  "name": "path.jerryio-to-ez-template",
+  "version": "1.0",
+  "description": "Reads information from web pages",
+  "permissions": ["scripting", "activeTab"],
+  "background": {
+    "service_worker": "background.js"
+  },
   "action": {
-    "default_popup": "hello.html",
+    "default_popup": "popup.html",
     "default_icon": "icon.png"
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
 }
