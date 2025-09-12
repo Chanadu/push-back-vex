@@ -55,7 +55,7 @@ void base() {
 	chassis.pid_odom_set(
 		{
 			{{-26.66_in, -25.665_in, 225_deg}, rev, DRIVE_SPEED},
-			{{-24.868_in, -43.17_in, 164_deg}, fwd, static_cast<int>(DRIVE_SPEED * .75)},
+			{{-24.868_in, -43.17_in, 164_deg}, fwd, SLOW_DRIVE_SPEED},
 			{{-17.414_in, -29.22_in, 0_deg}, fwd, DRIVE_SPEED},
 			{{-14.723_in, -11.338_in, 0_deg}, fwd, DRIVE_SPEED},
 		},
