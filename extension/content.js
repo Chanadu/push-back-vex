@@ -4,15 +4,20 @@ function sleep(ms) {
 }
 
 async function runClickAndRead() {
-	// Select all list items
-	const items = document.querySelectorAll('div.PathTreePanel-TreeItemContent');
+	const items = document.querySelectorAll('.PathTreePanel-TreeItemLabel');
 
-	for (const li of items) {
-		li.click(); // simulate click
-		await sleep(500); // wait for DOM to update
+	// console.log(items.length);
 
-		// Example: read from some element after click
-		const target = document.querySelector('#:r14:'); // adjust selector
+	let first = true;
+	for (let li of items) {
+		if (first) {
+			first = false;
+			continue;
+		}
+		console.log(li);
+		li.click(); 
+		await sleep(500); 
+		const target = document.querySelector('.MuiInputBase-input.MuiOutlinedInput-input.MuiInputBase-inputSizeSmall.css-17opruk'); 
 		if (target) {
 			console.log('Extracted text:', target.innerText);
 		} else {
