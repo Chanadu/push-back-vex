@@ -2,15 +2,23 @@
 	"name": "extension",
 	"version": "1.0.0",
 	"description": "",
-	"main": "content.js",
+	"main": "src/content.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"build": "webpack --config webpack/webpack.config.js",
+		"watch": "webpack --config webpack/webpack.config.js --watch"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
 	"type": "commonjs",
 	"devDependencies": {
-		"prettier": "3.6.2"
+		"@types/chrome": "^0.1.11",
+		"copy-webpack-plugin": "^13.0.1",
+		"html-webpack-plugin": "^5.6.4",
+		"prettier": "3.6.2",
+		"ts-loader": "^9.5.4",
+		"typescript": "^5.9.2",
+		"webpack": "^5.101.3",
+		"webpack-cli": "^6.0.1"
 	}
 }

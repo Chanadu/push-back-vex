@@ -1,9 +1,9 @@
 // Helper: wait for N ms
-function sleep(ms) {
+function sleep(ms : number) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function copyToClipboard(text) {
+async function copyToClipboard(text : string) {
   try {
     await navigator.clipboard.writeText(text);
     console.log("Copied to clipboard:", text);
@@ -12,17 +12,17 @@ async function copyToClipboard(text) {
   }
 }
 
-function getInputValueByLabelText(labelText) {
+function getInputValueByLabelText(labelText : string) {
   const labels = document.querySelectorAll("label");
 
   for (const label of labels) {
     if (label.innerText.trim() === labelText) {
       if (label.htmlFor) {
-        const input = document.getElementById(label.htmlFor);
+        const input = document.getElementById(label.htmlFor) as HTMLInputElement;
         if (input) return input.value;
       }
 
-      const input = label.querySelector("input, textarea, select");
+      const input = label.querySelector("input") as HTMLInputElement;
       if (input) return input.value;
     }
   }
@@ -37,11 +37,12 @@ async function runClickAndRead() {
 
 	let first = true;
 	for (const li of items) {
+		const element = li as HTMLElement;
 		if (first) {
 			first = false;
 			continue;
 		}
-		li.click(); 
+		element.click();
 		await sleep(300); 
 		const x = getInputValueByLabelText("X")
 		const y = getInputValueByLabelText("Y");
