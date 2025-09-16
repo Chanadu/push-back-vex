@@ -38,17 +38,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 	if (!tab?.id) return;
 
 	chrome.scripting.executeScript({
-		target: { tabId: tab.id! },
-		files: ['content.js'],
-	});
-});
-
-document.addEventListener('DOMContentLoaded', async () => {
-	const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
-
-	if (!tab?.id) return;
-
-	chrome.scripting.executeScript({
 		target: { tabId: tab.id },
 		files: ['setup.js'],
 	});

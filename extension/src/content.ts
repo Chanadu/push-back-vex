@@ -1,3 +1,4 @@
+//
 // Helper: wait for N ms
 function sleep(ms: number) {
 	return new Promise((resolve) => setTimeout(resolve, ms));
@@ -121,13 +122,29 @@ async function runClickAndRead() {
 	await copyToClipboard(code);
 }
 
+function start() {
+	const INJECT_KEY = '__PUSH_BACK_VEX_INJECTED__';
+	const INJECT_ATTR = 'data-push-back-vex-injected';
+	if ((window as any)[INJECT_KEY] === true || document.documentElement.getAttribute(INJECT_ATTR) === '1') {
+		console.log('Push Back VEX: already injected');
+		return;
+	}
+	try {
+		(window as any)[INJECT_KEY] = true;
+	} catch (e) {
+		// ignore
+	}
+	document.documentElement.setAttribute(INJECT_ATTR, '1');
+
+	chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+		if (message.action == 'data') {
+			console.log('Got data from popup:', JSON.stringify(message.data));
+		} else {
+			console.log('Unknown Message action: ' + message.action);
+		}
+	});
+}
+
 // runClickAndRead();
 //
 //
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-	if (message.action == 'data') {
-		console.log('Got data from popup:', JSON.stringify(message.data));
-	} else {
-		console.log('Unknown Message action: ' + message.action);
-	}
-});
