@@ -121,4 +121,13 @@ async function runClickAndRead() {
 	await copyToClipboard(code);
 }
 
-runClickAndRead();
+// runClickAndRead();
+//
+//
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+	if (message.action == 'data') {
+		console.log('Got data from popup:', JSON.stringify(message.data));
+	} else {
+		console.log('Unknown Message action: ' + message.action);
+	}
+});
