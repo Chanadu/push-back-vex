@@ -3,7 +3,7 @@
 	"name": "path.jerryio-to-ez-template",
 	"version": "1.0",
 	"description": "Reads information from web pages",
-	"permissions": ["scripting", "activeTab"],
+	"permissions": ["scripting", "activeTab", "clipboardWrite"],
 	"action": {
 		"default_popup": "popup.html",
 		"default_icon": "icon.png"
