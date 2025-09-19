@@ -2,12 +2,14 @@
 #include "auton.hpp"
 #include "subsystems.hpp"
 
-ez::Drive chassis(	//
-	{-1, 2, -3},
-	{4, -5, 6},
-	11,
-	2.75,
-	(600.0) * (48.0 / 60.0)	 //
+
+
+ez::Drive drivetrain(	
+	chassis::ports::leftMotors,
+	chassis::ports::rightMotors,
+	chassis::ports::imu,
+	chassis::wheelDiameter,
+	chassis::ticks //	
 );
 
 void initialize() {
@@ -15,22 +17,23 @@ void initialize() {
 
 	pros::delay(500);
 
-	chassis.opcontrol_curve_buttons_toggle(true);
-	chassis.opcontrol_drive_activebrake_set(2.0);
-	chassis.opcontrol_curve_default_set(1.019, 1.019);
+	drivetrain.opcontrol_curve_buttons_toggle(true);
+	drivetrain.opcontrol_drive_activebrake_set(2.0);
+	drivetrain.opcontrol_curve_default_set(1.019, 1.019);
 
 	defaultAutonConstants();
 
 	ez::as::auton_selector.autons_add(	//
 		{
-			{"Drive Forward 2ft", driveForward},  //
-			{"Turn Right 90 Degrees", turnRight}  //
+			{"Drive Forward 2ft", driveForward},   //
+			{"Turn Right 90 Degrees", turnRight},  //
+			{"Run 'Base' Auton", base}			   //
 		}  //
 	);
 
-	chassis.initialize();
+	drivetrain.initialize();
 	ez::as::initialize();
-	master.rumble(chassis.drive_imu_calibrated() ? "." : "---");
+	master.rumble(drivetrain.drive_imu_calibrated() ? "." : "-------");
 }
 
 void disabled() {

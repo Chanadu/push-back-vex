@@ -4,15 +4,15 @@
 
 void practiceOnly() {
 	if (!pros::competition::is_connected()) {
-		if (chassis.pid_tuner_enabled())
-			chassis.pid_tuner_disable();
+		if (drivetrain.pid_tuner_enabled())
+			drivetrain.pid_tuner_disable();
 
 		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B) && master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
-			pros::motor_brake_mode_e_t preference = chassis.drive_brake_get();
+			pros::motor_brake_mode_e_t preference = drivetrain.drive_brake_get();
 			pros::lcd::print(5, "Running Auton");
 
 			autonomous();
-			chassis.drive_brake_set(preference);
+			drivetrain.drive_brake_set(preference);
 		}
 	}
 }
@@ -44,8 +44,8 @@ void practiceOnly() {
 
 void opcontrol() {
 	while (true) {
-		chassis.drive_brake_set(pros::E_MOTOR_BRAKE_COAST);
-		chassis.opcontrol_arcade_standard(ez::SPLIT);
+		drivetrain.drive_brake_set(pros::E_MOTOR_BRAKE_COAST);
+		drivetrain.opcontrol_arcade_standard(ez::SPLIT);
 
 		practiceOnly();
 		// intakeMotorControl();

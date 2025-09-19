@@ -72,11 +72,12 @@ async function copyToClipboard(text: string) {
 
 function createCode(pathNodes: NodeData[]): string {
 	let code: string[] = [];
+	const chassisName = "drivetrain";
 
 	code.push(
-		`chassis.odom_xyt_set(${pathNodes[0].pos.x}_in, ${pathNodes[0].pos.y}_in, ${pathNodes[0].pos.heading}_deg);`,
+		`${chassisName}.odom_xyt_set(${pathNodes[0].pos.x}_in, ${pathNodes[0].pos.y}_in, ${pathNodes[0].pos.heading}_deg);`,
 		'',
-		`chassis.pid_odom_set(`,
+		`${chassisName}.pid_odom_set(`,
 		`\t{`,
 	);
 
@@ -89,9 +90,9 @@ function createCode(pathNodes: NodeData[]): string {
 	code.push(`\t},`, `\ttrue);`, ``, `int currentIndex = 0;`);
 
 	for (let i = 1; i < pathNodes.length; i++) {
-		code.push(`chassis.pid_wait_until_index(${i});`);
+		code.push(`${chassisName}.pid_wait_until_index(${i});`);
 	}
-	code.push('chassis.pid_wait();');
+	code.push(`${chassisName}.pid_wait();`);
 
 	let finalCode = '\t' + code.join('\n\t');
 
