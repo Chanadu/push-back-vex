@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
 	mode: 'production',
 	entry: {
-		content: path.resolve(__dirname, '..', 'src', 'content.ts'),
+		types: path.resolve(__dirname, '..', 'src', 'types.ts'),
 		popup: path.resolve(__dirname, '..', 'src', 'popup.ts'),
 		setup: path.resolve(__dirname, '..', 'src', 'setup.ts'),
 	},
@@ -32,7 +32,7 @@ module.exports = {
 			title: 'Path Jerry to Ez Template',
 			template: './src/popup.html',
 			filename: 'popup.html',
-			inject: 'body',
+			inject: false,
 		}),
 	],
 };

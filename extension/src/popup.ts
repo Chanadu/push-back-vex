@@ -1,15 +1,42 @@
-let numOfNodes = -1;
+let pathNodes: PathNode[] = [];
 /// <reference types="chrome"/>
 //
 
-type NodeData = {
-	speed: string;
-	direction: string;
-};
+document.addEventListener(
+	'DOMContentLoaded',
+	async () => {
+		console.log('Dom Content Loaded');
+
+		chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+			if (message.action == 'nodes') {
+				pathNodes = message.data.nodes;
+				console.log('Got Path Node Positions');
+				createOptionSelectors(pathNodes.length);
+			} else {
+				console.log('Unknown message.action: ' + message.action);
+			}
+		});
+
+		const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+
+		if (!tab?.id) return;
+
+		chrome.scripting.executeScript({
+			target: { tabId: tab.id },
+			files: ['setup.js'],
+		});
+	},
+	{ once: true },
+);
 
 document.getElementById('run')!.addEventListener('click', async () => {
 	let data: NodeData[] = [];
-	for (let i = 1; i <= numOfNodes - 1; i++) {
+	data.push({
+		speed: undefined,
+		direction: undefined,
+		pos: pathNodes[0],
+	});
+	for (let i = 1; i <= pathNodes.length - 1; i++) {
 		const from = i;
 		const to = i + 1;
 		const idBase = `node-${from}-to-${to}`;
@@ -19,38 +46,59 @@ document.getElementById('run')!.addEventListener('click', async () => {
 		data.push({
 			speed: speedSelect.value,
 			direction: dirSelect.value,
+			pos: pathNodes[i],
 		});
 	}
 
-	const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-	chrome.tabs.sendMessage(tab.id!, {
-		action: 'data',
-		data: {
-			fullScript: false,
-			nodeDataList: data,
-		},
-	});
+	let code = createCode(data);
+	await copyToClipboard(code);
 });
 
-document.addEventListener('DOMContentLoaded', async () => {
-	const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
-
-	if (!tab?.id) return;
-
-	chrome.scripting.executeScript({
-		target: { tabId: tab.id },
-		files: ['setup.js'],
-	});
-});
-
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-	if (message.action == 'updateNumberOfNodes') {
-		numOfNodes = message.data.numberOfNodes;
-		createOptionSelectors(+message.data.numberOfNodes);
-	} else {
-		console.log('Unknown message.action: ' + message.action);
+async function copyToClipboard(text: string) {
+	let codeText = document.querySelector('#codeText');
+	if (!codeText) {
+		codeText = document.createElement('textarea');
+		codeText.id = 'codeText';
+		document.body.appendChild(codeText);
 	}
-});
+	const textarea = codeText as HTMLTextAreaElement;
+
+	textarea.value = text;
+	textarea.select();
+	document.execCommand('copy');
+
+	console.log('Copied to Clipboard');
+}
+
+function createCode(pathNodes: NodeData[]): string {
+	let code: string[] = [];
+
+	code.push(
+		`chassis.odom_xyt_set(${pathNodes[0].pos.x}_in, ${pathNodes[0].pos.y}_in, ${pathNodes[0].pos.heading}_deg);`,
+		'',
+		`chassis.pid_odom_set(`,
+		`\t{`,
+	);
+
+	for (let i = 1; i < pathNodes.length; i++) {
+		code.push(
+			`\t\t{{${pathNodes[i].pos.x}_in, ${pathNodes[i].pos.y}_in, ${pathNodes[i].pos.heading}_deg}, ${pathNodes[i].direction}, ${pathNodes[i].speed}},`,
+		);
+	}
+
+	code.push(`\t},`, `\ttrue);`, ``, `int currentIndex = 0;`);
+
+	for (let i = 1; i < pathNodes.length; i++) {
+		code.push(`chassis.pid_wait_until_index(${i});`);
+	}
+	code.push('chassis.pid_wait();');
+
+	let finalCode = '\t' + code.join('\n\t');
+
+	console.log('Created Code: \n' + finalCode);
+
+	return finalCode;
+}
 
 function createOptionSelectors(n: number) {
 	const out = document.getElementById('output');
