@@ -1,5 +1,5 @@
 #include "auton.hpp"
-#include "main.h"
+#include "EZ-Template/sdcard.hpp"
 #include "subsystems.hpp"
 
 void autonomous() {
@@ -72,5 +72,20 @@ void base() {
 	chassis::drivetrain.pid_wait();
 }
 
-void driveForward() {}
-void turnRight() {}
+void driveForward() {
+	chassis::drivetrain.odom_xyt_set(0_in, 0_in, 0_deg);
+	chassis::drivetrain.pid_odom_set(
+		{
+			{{24.00_in, 0_in, 0_deg}, fwd, DRIVE_SPEED},
+		},
+		true);
+}
+
+void turnRight() {
+	chassis::drivetrain.odom_xyt_set(0_in, 0_in, 0_deg);
+	chassis::drivetrain.pid_odom_set(
+		{
+			{{0_in, 0_in, 90_deg}, fwd, TURN_SPEED},
+		},
+		true);
+}

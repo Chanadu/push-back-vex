@@ -44,8 +44,10 @@
 #include "EZ-Template/api.hpp"
 
 // More includes here...
-// #include "autons.hpp"
-// #include "subsystems.hpp"
+//
+//
+#include "auton.hpp"
+#include "subsystems.hpp"
 
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do

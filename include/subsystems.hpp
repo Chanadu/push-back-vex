@@ -1,33 +1,69 @@
 #pragma once
 
-#include "EZ-Template/api.hpp"
-#include "api.h"
+#include <cstdint>
+#include <vector>
+#include "EZ-Template/drive/drive.hpp"
+#include "EZ-Template/util.hpp"
+#include "pros/abstract_motor.hpp"
+#include "pros/misc.h"
+#include "pros/motors.h"
 
-// Your motors, sensors, etc. should go here.  Below are examples
 namespace chassis {
-    namespace ports {
-        const std::vector<int> leftMotors = {-11, -6, 5};
-        const std::vector<int> rightMotors = {18, 8, -7};
-        constexpr int topMotor = 19;
-        constexpr int conveyorMotor = 9;
-        constexpr int tubeMotor = 4;
-        constexpr int imu = 10;
-        constexpr int radio = 20;
-    }
-    
-    const inline pros::Motor topMotor(ports::topMotor);
-    const inline pros::Motor conveyorMotor(ports::conveyorMotor);
+	namespace ports {
+		const std::uint8_t imu = 10;
+		const std::uint8_t radio = 20;
 
-    const inline pros::Motor tubeMotor(ports::tubeMotor);
-    constexpr double tubeBasePosition = 20;
-    constexpr double tubeExtendedPosition = 176;
+		const std::vector<int> driveLeft = {-11, -6, 5};
+		const std::vector<int> driveRight = {18, 8, -7};
 
-    constexpr double wheelDiameter = 2.75;
-    constexpr double ticks = (600.0) * (48.0 / 60.0);
-    constexpr double ratio = 1;
+		const std::uint8_t top = 19;
+		const std::uint8_t conveyor = 9;
+		const std::uint8_t tube = 'A';
+		const std::uint8_t holder = 'B';
+	}  // namespace ports
 
-    
-    extern Drive drivetrain;
-}
+	namespace drive {
+		const pros::MotorGears gearset = pros::MotorGears::red;
+		const double wheelDiameter = 2.75;
+		const double ticks = (600.0) * (48.0 / 60.0);
+		const double ratio = 1;
 
-// inline pros::adi::DigitalIn limit_switch('A');
+		const pros::motor_brake_mode_e_t brakeMode = pros::E_MOTOR_BRAKE_COAST;
+		const ez::e_type stickType = ez::SPLIT;
+	}  // namespace drive
+	extern ez::Drive drivetrain;
+
+	struct MotorData {
+		const pros::Motor motor;
+		const pros::controller_digital_e_t controller[2];
+		const pros::motor_brake_mode_e_t brakeMode = pros::E_MOTOR_BRAKE_COAST;
+		const pros::motor_encoder_units_e_t encoderUnits = pros::E_MOTOR_ENCODER_DEGREES;
+	};
+
+	struct PneumaticData {
+		const pros::adi::Pneumatics piston;
+		const pros::controller_digital_e_t controller;
+	};
+
+	const MotorData top{
+		pros::Motor(ports::top, pros::MotorGears::blue),
+		{pros::E_CONTROLLER_DIGITAL_L1, pros::E_CONTROLLER_DIGITAL_L2},
+	};
+
+	const MotorData conveyor{
+		pros::Motor(ports::conveyor, pros::MotorGears::blue),
+		{pros::E_CONTROLLER_DIGITAL_R2, pros::E_CONTROLLER_DIGITAL_R1},
+	};
+
+	const PneumaticData tube{
+		pros::adi::Pneumatics(ports::tube, false),
+		pros::E_CONTROLLER_DIGITAL_Y,
+	};
+
+	const PneumaticData holder{
+		pros::adi::Pneumatics(ports::holder, false),
+		pros::E_CONTROLLER_DIGITAL_X,
+	};
+
+	extern void setupMotor(MotorData* motorData);
+}  // namespace chassis
