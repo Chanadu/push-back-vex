@@ -40,11 +40,6 @@ namespace chassis {
 		const pros::motor_encoder_units_e_t encoderUnits = pros::E_MOTOR_ENCODER_DEGREES;
 	};
 
-	struct PneumaticData {
-		const pros::adi::Pneumatics piston;
-		const pros::controller_digital_e_t controller;
-	};
-
 	const MotorData top{
 		pros::Motor(ports::top, pros::MotorGears::blue),
 		{pros::E_CONTROLLER_DIGITAL_L1, pros::E_CONTROLLER_DIGITAL_L2},
@@ -53,6 +48,11 @@ namespace chassis {
 	const MotorData conveyor{
 		pros::Motor(ports::conveyor, pros::MotorGears::blue),
 		{pros::E_CONTROLLER_DIGITAL_R2, pros::E_CONTROLLER_DIGITAL_R1},
+	};
+
+	struct PneumaticData {
+		const pros::adi::Pneumatics piston;
+		const pros::controller_digital_e_t controller;
 	};
 
 	const PneumaticData tube{
