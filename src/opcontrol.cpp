@@ -1,4 +1,4 @@
-#include "subsystems.hpp"
+#include "main.h"
 
 void motorControl(const pros::Motor* motor, const pros::controller_digital_e_t buttons[2], uint speed = 127) {
 	const int motorPower = static_cast<int>((master.get_digital(buttons[0]) - master.get_digital(buttons[1])) * speed);
@@ -13,10 +13,10 @@ void pistonControl(const pros::adi::Pneumatics* piston, pros::controller_digital
 }
 
 void opcontrol() {
-	while (true) {
-		chassis::drivetrain.drive_brake_set(chassis::drive::brakeMode);
-		chassis::drivetrain.opcontrol_arcade_standard(chassis::drive::stickType);
+	chassis::drivetrain.drive_brake_set(chassis::drive::brakeMode);
+	chassis::drivetrain.opcontrol_arcade_standard(chassis::drive::stickType);
 
+	while (true) {
 		motorControl(&chassis::conveyor.motor, chassis::conveyor.controller);
 		motorControl(&chassis::top.motor, chassis::top.controller);
 

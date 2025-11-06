@@ -1,12 +1,6 @@
 #pragma once
 
-#include <cstdint>
-#include <vector>
-#include "EZ-Template/drive/drive.hpp"
-#include "EZ-Template/util.hpp"
-#include "pros/abstract_motor.hpp"
-#include "pros/misc.h"
-#include "pros/motors.h"
+#include "main.h"
 
 namespace chassis {
 	namespace ports {

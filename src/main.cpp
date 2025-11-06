@@ -1,6 +1,4 @@
 #include "main.h"
-#include "auton.hpp"
-#include "subsystems.hpp"
 
 namespace chassis {
 	ez::Drive drivetrain(chassis::ports::driveLeft,
