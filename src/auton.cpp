@@ -1,6 +1,4 @@
-#include "auton.hpp"
-#include "EZ-Template/sdcard.hpp"
-#include "subsystems.hpp"
+#include "main.h"
 
 void autonomous() {
 	chassis::drivetrain.pid_targets_reset();
