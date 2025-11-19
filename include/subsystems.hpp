@@ -32,32 +32,30 @@ namespace chassis {
 		const pros::controller_digital_e_t controller[2];
 		const pros::motor_brake_mode_e_t brakeMode = pros::E_MOTOR_BRAKE_COAST;
 		const pros::motor_encoder_units_e_t encoderUnits = pros::E_MOTOR_ENCODER_DEGREES;
+		const std::int8_t defaultSpeed = 127;
+		const double slowFactor = 0.5;
+		int speed = defaultSpeed;
+
+		void setup(void) {
+			motor.set_brake_mode(brakeMode);
+			motor.set_encoder_units(encoderUnits);
+		}
+
+		void toggleSpeed(void) {
+			speed = (speed == defaultSpeed) ? static_cast<std::int8_t>(defaultSpeed * slowFactor) : defaultSpeed;
+		}
 	};
 
-	const MotorData top{
-		pros::Motor(ports::top, pros::MotorGears::blue),
-		{pros::E_CONTROLLER_DIGITAL_L1, pros::E_CONTROLLER_DIGITAL_L2},
-	};
-
-	const MotorData conveyor{
-		pros::Motor(ports::conveyor, pros::MotorGears::blue),
-		{pros::E_CONTROLLER_DIGITAL_R2, pros::E_CONTROLLER_DIGITAL_R1},
-	};
+	extern MotorData top;
+	extern MotorData conveyor;
 
 	struct PneumaticData {
-		const pros::adi::Pneumatics piston;
+		pros::adi::Pneumatics piston;
 		const pros::controller_digital_e_t controller;
 	};
 
-	const PneumaticData tube{
-		pros::adi::Pneumatics(ports::tube, false),
-		pros::E_CONTROLLER_DIGITAL_Y,
-	};
-
-	const PneumaticData holder{
-		pros::adi::Pneumatics(ports::holder, false),
-		pros::E_CONTROLLER_DIGITAL_X,
-	};
+	extern PneumaticData tube;
+	extern PneumaticData holder;
 
 	extern void setupMotor(MotorData* motorData);
 }  // namespace chassis

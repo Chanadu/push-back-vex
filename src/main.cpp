@@ -1,18 +1,10 @@
 #include "main.h"
+#include "subsystems.hpp"
 
-namespace chassis {
-	ez::Drive drivetrain(chassis::ports::driveLeft,
-						 chassis::ports::driveRight,
-						 chassis::ports::imu,
-						 chassis::drive::wheelDiameter,
-						 chassis::drive::ticks	//
-	);
-
-	void setupMotor(const chassis::MotorData* motorData) {
-		(*motorData).motor.set_brake_mode((*motorData).brakeMode);
-		(*motorData).motor.set_encoder_units((*motorData).encoderUnits);
-	}
-}  // namespace chassis
+void setupMotors(void) {
+	chassis::conveyor.setup();
+	chassis::top.setup();
+}
 
 void initialize() {
 	ez::ez_template_print();
@@ -35,8 +27,7 @@ void initialize() {
 	ez::as::initialize();
 	master.rumble(chassis::drivetrain.drive_imu_calibrated() ? "." : "-------");
 
-	setupMotor(&chassis::conveyor);
-	setupMotor(&chassis::top);
+	setupMotors();
 }
 
 void disabled() {}
