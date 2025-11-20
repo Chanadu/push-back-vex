@@ -31,4 +31,6 @@ namespace chassis {
 		pros::adi::Pneumatics(ports::holder, false),
 		pros::E_CONTROLLER_DIGITAL_X,
 	};
+
+	std::string controllerText[3] = {"", "", ""};
 }  // namespace chassis

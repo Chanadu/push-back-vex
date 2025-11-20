@@ -60,5 +60,7 @@ namespace chassis {
 	extern PneumaticData tube;
 	extern PneumaticData holder;
 
+	extern std::string controllerText[3];
+
 	extern void setupMotor(MotorData* motorData);
 }  // namespace chassis
