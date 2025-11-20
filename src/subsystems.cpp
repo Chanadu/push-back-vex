@@ -23,13 +23,13 @@ namespace chassis {
 	};
 
 	PneumaticData tube{
-		pros::adi::Pneumatics(ports::tube, false),
-		pros::E_CONTROLLER_DIGITAL_Y,
+		.piston=pros::adi::Pneumatics(ports::tube, false),
+		.controller=pros::E_CONTROLLER_DIGITAL_Y,
 	};
 
 	PneumaticData holder{
-		pros::adi::Pneumatics(ports::holder, false),
-		pros::E_CONTROLLER_DIGITAL_X,
+		.piston=pros::adi::Pneumatics(ports::holder, false),
+		.controller=pros::E_CONTROLLER_DIGITAL_X,
 	};
 
 	std::string controllerText[3] = {"", "", ""};
