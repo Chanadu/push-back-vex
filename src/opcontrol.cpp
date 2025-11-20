@@ -20,7 +20,7 @@ void pistonControl(chassis::PneumaticData* pneumaticData) {
 	}
 }
 
-void controllerTextControl() {
+void controllerTextControl(int frameCount, int* currentControllerLine) {
 	// Controller Layout
 	// Battery: XX%
 	// Top: [S/F]  Conveyor: [S/F]
@@ -30,6 +30,13 @@ void controllerTextControl() {
 						+ "Conveyor: [" + std::string((chassis::conveyor.speed == chassis::conveyor.defaultSpeed) ? "F" : "S") + "]";
 	chassis::controllerText[2] = "Tube: [" + std::string(chassis::tube.piston.is_extended() ? "O" : "I") + "]  "
 						+ "Holder: [" + std::string(chassis::holder.piston.is_extended() ? "O" : "I") + "]";
+
+
+	if (frameCount % 5 == 0) {
+		master.set_text(*currentControllerLine, 0, chassis::controllerText[*currentControllerLine].c_str());
+		(*currentControllerLine)++;
+		*currentControllerLine %= 3;
+	}
 }
 
 void opcontrol() {
@@ -45,14 +52,8 @@ void opcontrol() {
 		pistonControl(&chassis::tube);
 		pistonControl(&chassis::holder);
 		
-		controllerTextControl();
+		controllerTextControl(frameCount, &currentControllerLine);
 		
-		if (frameCount % 5 == 0) {
-			master.set_text(currentControllerLine, 0, chassis::controllerText[currentControllerLine].c_str());
-			currentControllerLine++;
-			currentControllerLine %= 3;
-		}
-
 		frameCount++;
 		pros::delay(ez::util::DELAY_TIME);
 	}
