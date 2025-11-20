@@ -1,7 +1,6 @@
 #pragma once
 
 #include "main.h"
-#include "pros/misc.h"
 
 namespace chassis {
 	namespace ports {

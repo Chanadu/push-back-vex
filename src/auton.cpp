@@ -1,4 +1,5 @@
 #include "main.h"
+#include "auton.hpp"
 
 void autonomous() {
 	chassis::drivetrain.pid_targets_reset();
