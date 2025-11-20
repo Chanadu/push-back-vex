@@ -9,13 +9,17 @@ namespace chassis {
 	);
 
 	MotorData top{
-		pros::Motor(ports::top, pros::MotorGears::blue),
-		{pros::E_CONTROLLER_DIGITAL_L1, pros::E_CONTROLLER_DIGITAL_L2},
+		.motor=pros::Motor(ports::top, pros::MotorGears::blue),
+		.controller={pros::E_CONTROLLER_DIGITAL_L1, pros::E_CONTROLLER_DIGITAL_L2},
+		.canSlow=true,
+		.speedToggleController=pros::E_CONTROLLER_DIGITAL_B,
 	};
 
 	MotorData conveyor{
-		pros::Motor(ports::conveyor, pros::MotorGears::blue),
-		{pros::E_CONTROLLER_DIGITAL_R2, pros::E_CONTROLLER_DIGITAL_R1},
+		.motor=pros::Motor(ports::conveyor, pros::MotorGears::blue),
+		.controller={pros::E_CONTROLLER_DIGITAL_R2, pros::E_CONTROLLER_DIGITAL_R1},
+		.canSlow=true,
+		.speedToggleController=pros::E_CONTROLLER_DIGITAL_A,
 	};
 
 	PneumaticData tube{

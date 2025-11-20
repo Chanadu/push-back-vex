@@ -1,6 +1,7 @@
 #pragma once
 
 #include "main.h"
+#include "pros/misc.h"
 
 namespace chassis {
 	namespace ports {
@@ -33,7 +34,9 @@ namespace chassis {
 		const pros::motor_brake_mode_e_t brakeMode = pros::E_MOTOR_BRAKE_COAST;
 		const pros::motor_encoder_units_e_t encoderUnits = pros::E_MOTOR_ENCODER_DEGREES;
 		const std::int8_t defaultSpeed = 127;
-		const double slowFactor = 0.5;
+		const bool canSlow = false;
+		const pros::controller_digital_e_t speedToggleController;
+		const double slowFactor = 0.5;	
 		int speed = defaultSpeed;
 
 		void setup(void) {

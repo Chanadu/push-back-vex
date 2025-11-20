@@ -2,10 +2,16 @@
 #include "subsystems.hpp"
 
 void motorControl(chassis::MotorData* motorData) {
+	if (motorData->canSlow && master.get_digital_new_press(motorData->speedToggleController)) {
+		motorData->toggleSpeed();
+	}
+
 	const int motorPower = 
 		master.get_digital(motorData->controller[0]) - master.get_digital(motorData->controller[1]);
 	
 	motorData->motor.move(motorPower * motorData->speed);
+
+
 }
 
 void pistonControl(chassis::PneumaticData* pneumaticData) {
@@ -19,15 +25,12 @@ void opcontrol() {
 		chassis::drivetrain.drive_brake_set(chassis::drive::brakeMode);
 		chassis::drivetrain.opcontrol_arcade_standard(chassis::drive::stickType);
 
-		if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
-			chassis::conveyor.toggleSpeed();
-		}
-
 		motorControl(&chassis::conveyor);
 		motorControl(&chassis::top);
 
 		pistonControl(&chassis::tube);
 		pistonControl(&chassis::holder);
+		
 		pros::delay(ez::util::DELAY_TIME);
 	}
 }
