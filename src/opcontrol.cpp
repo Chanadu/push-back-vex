@@ -23,13 +23,13 @@ void pistonControl(chassis::PneumaticData& pneumaticData) {
 void controllerTextControl(int frameCount, int& currentControllerLine) {
 	// Controller Layout
 	// Battery: XX%
-	// Top: [S/F]  Conveyor: [S/F]
-	// Tube: [O/I]  Holder: [O/I]
+	// Top: S/F Con: S/F
+	// Tube: O/I Hold: O/I
 	chassis::controllerText[0] = "Battery: " + std::to_string(pros::battery::get_capacity()) + "%";
-	chassis::controllerText[1] = "Top: [" + std::string((chassis::top.speed == chassis::top.defaultSpeed) ? "F" : "S") + "]  "
-						+ "Conveyor: [" + std::string((chassis::conveyor.speed == chassis::conveyor.defaultSpeed) ? "F" : "S") + "]";
-	chassis::controllerText[2] = "Tube: [" + std::string(chassis::tube.piston.is_extended() ? "O" : "I") + "]  "
-						+ "Holder: [" + std::string(chassis::holder.piston.is_extended() ? "O" : "I") + "]";
+	chassis::controllerText[1] = "Top: " + std::string((chassis::top.speed == chassis::top.defaultSpeed) ? "F" : "S") + " "
+						+ "Con: " + std::string((chassis::conveyor.speed == chassis::conveyor.defaultSpeed) ? "F" : "S");
+	chassis::controllerText[2] = "Tube: " + std::string(chassis::tube.piston.is_extended() ? "O" : "I") + "  "
+						+ "Hold: " + std::string(chassis::holder.piston.is_extended() ? "O" : "I");
 
 
 	if (frameCount % 5 == 0) {
