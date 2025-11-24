@@ -1,4 +1,5 @@
 #include "main.h"
+#include "pros/screen.h"
 #include "subsystems.hpp"
 
 void motorControl(chassis::MotorData& motorData) {
@@ -31,9 +32,9 @@ void controllerTextControl(int frameCount, int& currentControllerLine) {
 	chassis::controllerText[2] = "Tube: " + std::string(chassis::tube.piston.is_extended() ? "O" : "I") + "  "
 						+ "Hold: " + std::string(chassis::holder.piston.is_extended() ? "O" : "I");
 
-
 	if (frameCount % 5 == 0) {
 		master.set_text(currentControllerLine, 0, chassis::controllerText[currentControllerLine].c_str());
+		pros::screen::print(pros::E_TEXT_MEDIUM, currentControllerLine, chassis::controllerText[currentControllerLine].c_str());
 		currentControllerLine++;
 		currentControllerLine %= 3;
 	}
