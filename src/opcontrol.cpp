@@ -1,26 +1,26 @@
 #include "main.h"
 #include "subsystems.hpp"
 
-void motorControl(chassis::MotorData* motorData) {
-	if (motorData->canSlow && master.get_digital_new_press(motorData->speedToggleController)) {
-		motorData->toggleSpeed();
+void motorControl(chassis::MotorData& motorData) {
+	if (motorData.canSlow && master.get_digital_new_press(motorData.speedToggleController)) {
+		motorData.toggleSpeed();
 	}
 
 	const int motorPower = 
-		master.get_digital(motorData->controller[0]) - master.get_digital(motorData->controller[1]);
+		master.get_digital(motorData.controller[0]) - master.get_digital(motorData.controller[1]);
 	
-	motorData->motor.move(motorPower * motorData->speed);
+	motorData.motor.move(motorPower * motorData.speed);
 
 
 }
 
-void pistonControl(chassis::PneumaticData* pneumaticData) {
-	if (master.get_digital_new_press(pneumaticData->controller)) {
-		pneumaticData->piston.toggle();
+void pistonControl(chassis::PneumaticData& pneumaticData) {
+	if (master.get_digital_new_press(pneumaticData.controller)) {
+		pneumaticData.piston.toggle();
 	}
 }
 
-void controllerTextControl(int frameCount, int* currentControllerLine) {
+void controllerTextControl(int frameCount, int& currentControllerLine) {
 	// Controller Layout
 	// Battery: XX%
 	// Top: [S/F]  Conveyor: [S/F]
@@ -33,9 +33,9 @@ void controllerTextControl(int frameCount, int* currentControllerLine) {
 
 
 	if (frameCount % 5 == 0) {
-		master.set_text(*currentControllerLine, 0, chassis::controllerText[*currentControllerLine].c_str());
-		(*currentControllerLine)++;
-		*currentControllerLine %= 3;
+		master.set_text(currentControllerLine, 0, chassis::controllerText[currentControllerLine].c_str());
+		currentControllerLine++;
+		currentControllerLine %= 3;
 	}
 }
 
@@ -46,13 +46,13 @@ void opcontrol() {
 		chassis::drivetrain.drive_brake_set(chassis::drive::brakeMode);
 		chassis::drivetrain.opcontrol_arcade_standard(chassis::drive::stickType);
 
-		motorControl(&chassis::conveyor);
-		motorControl(&chassis::top);
+		motorControl(chassis::conveyor);
+		motorControl(chassis::top);
 
-		pistonControl(&chassis::tube);
-		pistonControl(&chassis::holder);
+		pistonControl(chassis::tube);
+		pistonControl(chassis::holder);
 		
-		controllerTextControl(frameCount, &currentControllerLine);
+		controllerTextControl(frameCount, currentControllerLine);
 		
 		frameCount++;
 		pros::delay(ez::util::DELAY_TIME);
