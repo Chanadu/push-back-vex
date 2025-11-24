@@ -61,6 +61,4 @@ namespace chassis {
 	extern PneumaticData holder;
 
 	extern std::string controllerText[3];
-
-	extern void setupMotor(MotorData& motorData);
 }  // namespace chassis
