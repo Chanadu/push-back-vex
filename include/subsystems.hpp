@@ -25,6 +25,7 @@ namespace chassis {
 		const pros::motor_brake_mode_e_t brakeMode = pros::E_MOTOR_BRAKE_COAST;
 		const ez::e_type stickType = ez::SPLIT;
 	}  // namespace drive
+	
 	extern ez::Drive drivetrain;
 
 	struct MotorData {
