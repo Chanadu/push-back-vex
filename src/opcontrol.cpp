@@ -7,12 +7,9 @@ void motorControl(chassis::MotorData& motorData) {
 		motorData.toggleSpeed();
 	}
 
-	const int motorPower = 
-		master.get_digital(motorData.controller[0]) - master.get_digital(motorData.controller[1]);
-	
+	const int motorPower = master.get_digital(motorData.controller[0]) - master.get_digital(motorData.controller[1]);
+
 	motorData.motor.move(motorPower * motorData.speed);
-
-
 }
 
 void pistonControl(chassis::PneumaticData& pneumaticData) {
@@ -27,10 +24,10 @@ void controllerTextControl(int frameCount, int& currentControllerLine) {
 	// Top: S/F Con: S/F
 	// Tube: O/I Hold: O/I
 	chassis::controllerText[0] = "Battery: " + std::to_string(pros::battery::get_capacity()) + "%";
-	chassis::controllerText[1] = "Top: " + std::string((chassis::top.speed == chassis::top.defaultSpeed) ? "F" : "S") + " "
-						+ "Con: " + std::string((chassis::conveyor.speed == chassis::conveyor.defaultSpeed) ? "F" : "S");
-	chassis::controllerText[2] = "Tube: " + std::string(chassis::tube.piston.is_extended() ? "O" : "I") + "  "
-						+ "Hold: " + std::string(chassis::holder.piston.is_extended() ? "O" : "I");
+	chassis::controllerText[1] = "Top: " + std::string((chassis::top.speed == chassis::top.defaultSpeed) ? "F" : "S") + " " +
+								 "Con: " + std::string((chassis::conveyor.speed == chassis::conveyor.defaultSpeed) ? "F" : "S");
+	chassis::controllerText[2] = "Tube: " + std::string(chassis::tube.piston.is_extended() ? "O" : "I") + "  " +
+								 "Hold: " + std::string(chassis::holder.piston.is_extended() ? "O" : "I");
 
 	if (frameCount % 5 == 0) {
 		master.set_text(currentControllerLine, 0, chassis::controllerText[currentControllerLine].c_str());
@@ -52,11 +49,10 @@ void opcontrol() {
 
 		pistonControl(chassis::tube);
 		pistonControl(chassis::holder);
-		
+
 		controllerTextControl(frameCount, currentControllerLine);
-		
+
 		frameCount++;
 		pros::delay(ez::util::DELAY_TIME);
 	}
 }
-

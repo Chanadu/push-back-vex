@@ -36,7 +36,7 @@ namespace chassis {
 		const std::int8_t defaultSpeed = 127;
 		const bool canSlow = false;
 		const pros::controller_digital_e_t speedToggleController;
-		const double slowFactor = 0.5;	
+		const double slowFactor = 0.5;
 		int speed = defaultSpeed;
 
 		void setup(void) {
@@ -44,9 +44,7 @@ namespace chassis {
 			motor.set_encoder_units(encoderUnits);
 		}
 
-		void toggleSpeed(void) {
-			speed = (speed == defaultSpeed) ? static_cast<std::int8_t>(defaultSpeed * slowFactor) : defaultSpeed;
-		}
+		void toggleSpeed(void) { speed = (speed == defaultSpeed) ? static_cast<std::int8_t>(defaultSpeed * slowFactor) : defaultSpeed; }
 	};
 
 	extern MotorData top;
