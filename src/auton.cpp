@@ -41,12 +41,17 @@ void defaultAutonConstants() {
 	// - if you have tracking wheels, you can run this higher.  1.0 is the max
 	chassis::drivetrain.odom_turn_bias_set(0.9);
 
-	chassis::drivetrain.odom_look_ahead_set(7_in);			 // This is how far ahead in the path the robot looks at
-	chassis::drivetrain.odom_boomerang_distance_set(16_in);	 // This sets the maximum distance away from target that the carrot point can be
-	chassis::drivetrain.odom_boomerang_dlead_set(0.625);	 // This handles how aggressive the end of boomerang motions are
+	// This is how far ahead in the path the robot looks at
+	chassis::drivetrain.odom_look_ahead_set(7_in);
 
-	chassis::drivetrain.pid_angle_behavior_set(
-		ez::shortest);	// Changes the default behavior for turning, this defaults it to the shortest path there
+	// This sets the maximum distance away from target that the carrot point can be
+	chassis::drivetrain.odom_boomerang_distance_set(16_in);
+
+	// This handles how aggressive the end of boomerang motions are
+	chassis::drivetrain.odom_boomerang_dlead_set(0.625);
+
+	// Changes the default behavior for turning, this defaults it to the shortest path there
+	chassis::drivetrain.pid_angle_behavior_set(ez::shortest);
 }
 
 void base() {

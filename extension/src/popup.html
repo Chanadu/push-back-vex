@@ -1,9 +1,446 @@
 <!doctype html>
 <html lang="en">
-	<body style="width: 30em">
-		<h1>Path Jerry -> EZ Template</h1>
-		<div id="output"></div>
-		<button id="run">Run Script</button>
+	<head>
+		<style>
+			* {
+				box-sizing: border-box;
+			}
+
+			body {
+				width: 80em;
+				margin: 0;
+				padding: 1.5em;
+				font-family:
+					-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+				background-color: #1e293b;
+				color: #f1f5f9;
+				min-height: 100vh;
+			}
+
+			h1 {
+				margin: 0 0 1.25em 0;
+				font-size: 1.75em;
+				font-weight: 700;
+				background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				background-clip: text;
+				letter-spacing: -0.02em;
+			}
+
+			#config {
+				background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+				border: 1px solid rgba(100, 116, 139, 0.3);
+				border-radius: 12px;
+				padding: 0.5em;
+				margin-bottom: 1.5em;
+				box-shadow:
+					0 4px 6px -1px rgba(0, 0, 0, 0.3),
+					0 2px 4px -1px rgba(0, 0, 0, 0.2);
+			}
+
+			#config h3 {
+				margin: 0 0 0.5em 0;
+				font-size: 1.1em;
+				font-weight: 600;
+				color: #e2e8f0;
+				display: flex;
+				align-items: center;
+				gap: 0.5em;
+				cursor: pointer;
+				user-select: none;
+			}
+
+			#config h3:hover {
+				color: #f1f5f9;
+			}
+
+			#configToggle .chevron {
+				font-size: 0.8em;
+				display: inline-block;
+			}
+
+			#configToggle .chevron::after {
+				content: 'v';
+			}
+
+			#config.collapsed #configToggle .chevron::after {
+				content: '>';
+			}
+
+			#configContent {
+				overflow: hidden;
+				transition:
+					max-height 0.3s ease,
+					opacity 0.3s ease;
+				max-height: 500px;
+				opacity: 1;
+			}
+
+			#config.collapsed #configContent {
+				max-height: 0;
+				opacity: 0;
+				margin-bottom: 0;
+			}
+
+			.config-row {
+				display: flex;
+				align-items: center;
+				gap: 1em;
+				margin-bottom: 0.5em;
+				padding: 0.25em 0;
+			}
+
+			.config-row:last-child {
+				margin-bottom: 0;
+			}
+
+			.config-label {
+				font-size: 0.9em;
+				color: #cbd5e1;
+				min-width: 140px;
+				font-weight: 500;
+			}
+
+			.config-input,
+			.config-select {
+				padding: 0.5em 0.875em;
+				font-size: 0.9em;
+				border: 1px solid rgba(100, 116, 139, 0.4);
+				border-radius: 8px;
+				background-color: #1e293b;
+				color: #f1f5f9;
+				min-width: 180px;
+				transition: all 0.2s ease;
+			}
+
+			.config-input:hover,
+			.config-select:hover {
+				border-color: rgba(100, 116, 139, 0.6);
+				background-color: #334155;
+			}
+
+			.config-input:focus,
+			.config-select:focus {
+				outline: none;
+				border-color: #60a5fa;
+				box-shadow:
+					0 0 0 3px rgba(96, 165, 250, 0.2),
+					0 2px 4px rgba(0, 0, 0, 0.2);
+				background-color: #334155;
+			}
+
+			.button-group {
+				display: flex;
+				gap: 0.75em;
+				margin-bottom: 1.5em;
+				flex-wrap: wrap;
+				align-items: center;
+				align-content: flex-start;
+			}
+
+			button {
+				padding: 0.625em 1.25em;
+				font-size: 0.9em;
+				font-weight: 600;
+				border: none;
+				border-radius: 8px;
+				cursor: pointer;
+				transition: all 0.2s ease;
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+				position: relative;
+				overflow: hidden;
+				height: 2.5em;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				vertical-align: top;
+				margin: 0;
+			}
+
+			button::before {
+				content: '';
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				width: 0;
+				height: 0;
+				border-radius: 50%;
+				background: rgba(255, 255, 255, 0.2);
+				transform: translate(-50%, -50%);
+				transition:
+					width 0.3s,
+					height 0.3s;
+			}
+
+			button:hover::before {
+				width: 300px;
+				height: 300px;
+			}
+
+			button:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+			}
+
+			button:active {
+				transform: translateY(0);
+				box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+			}
+
+			button#getNodes {
+				background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+				color: #ffffff;
+			}
+
+			button#getNodes:hover {
+				background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+			}
+
+			button#loadNodes {
+				background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+				color: #ffffff;
+			}
+
+			button#loadNodes:hover {
+				background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+			}
+
+			button#run {
+				background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+				color: #ffffff;
+			}
+
+			button#run:hover {
+				background: linear-gradient(135deg, #059669 0%, #047857 100%);
+			}
+
+			button#clearStorage {
+				background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+				color: #ffffff;
+			}
+
+			button#clearStorage:hover {
+				background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+			}
+
+			#container {
+				display: flex;
+				gap: 1.5em;
+				margin-top: 1.5em;
+				align-items: flex-start;
+			}
+
+			#output {
+				flex: 0 0 auto;
+				margin: 0;
+				padding: 0;
+				max-height: 600px;
+				overflow-y: auto;
+				padding-right: 0.75em;
+				min-width: 320px;
+			}
+
+			#output::-webkit-scrollbar {
+				width: 10px;
+			}
+
+			#output::-webkit-scrollbar-track {
+				background: rgba(30, 41, 59, 0.5);
+				border-radius: 5px;
+			}
+
+			#output::-webkit-scrollbar-thumb {
+				background: linear-gradient(135deg, #475569 0%, #64748b 100%);
+				border-radius: 5px;
+			}
+
+			#output::-webkit-scrollbar-thumb:hover {
+				background: linear-gradient(135deg, #64748b 0%, #94a3b8 100%);
+			}
+
+			.node-item {
+				display: flex;
+				flex-direction: column;
+				gap: 0.75em;
+				padding: 1em;
+				margin-bottom: 0.75em;
+				background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+				border: 1px solid rgba(100, 116, 139, 0.3);
+				border-radius: 10px;
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+				transition: all 0.2s ease;
+				width: fit-content;
+				max-width: 100%;
+			}
+
+			.node-item:hover {
+				border-color: rgba(96, 165, 250, 0.5);
+				box-shadow:
+					0 4px 8px rgba(0, 0, 0, 0.3),
+					0 0 0 1px rgba(96, 165, 250, 0.2);
+				transform: translateY(-1px);
+			}
+
+			.node-left {
+				width: 100%;
+			}
+
+			.node-label {
+				font-weight: 600;
+				font-size: 0.95em;
+				color: #e2e8f0;
+				padding-bottom: 0.25em;
+				border-bottom: 1px solid rgba(100, 116, 139, 0.2);
+			}
+
+			.node-middle,
+			.node-right {
+				display: flex;
+				align-items: center;
+				gap: 0.75em;
+				width: 100%;
+			}
+
+			.node-dir-label,
+			.node-speed-label {
+				font-size: 0.875em;
+				color: #cbd5e1;
+				white-space: nowrap;
+				min-width: 90px;
+				font-weight: 500;
+			}
+
+			.node-dir-select,
+			.node-speed-select {
+				padding: 0.375em 0.75em;
+				font-size: 0.875em;
+				border: 1px solid rgba(100, 116, 139, 0.4);
+				border-radius: 6px;
+				background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+				color: #f1f5f9;
+				cursor: pointer;
+				transition: all 0.2s ease;
+				width: auto;
+				min-width: fit-content;
+			}
+
+			.node-dir-select:hover,
+			.node-speed-select:hover {
+				border-color: rgba(96, 165, 250, 0.6);
+				background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+			}
+
+			.node-dir-select:focus,
+			.node-speed-select:focus {
+				outline: none;
+				border-color: #60a5fa;
+				box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+			}
+
+			#codeDisplay {
+				flex: 1;
+				margin: 0;
+				padding: 0;
+				padding-left: 0.75em;
+				min-width: 0;
+				display: flex;
+				flex-direction: column;
+			}
+
+			#codeDisplay h3 {
+				margin-top: 0;
+				margin-bottom: 1em;
+				font-size: 1.1em;
+				font-weight: 600;
+				color: #e2e8f0;
+				display: flex;
+				align-items: center;
+				gap: 0.5em;
+			}
+
+			#codeText {
+				width: 100%;
+				min-width: 100%;
+				max-width: 100%;
+				min-height: 100px;
+				max-height: 600px;
+				font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+				font-size: 13px;
+				line-height: 1.6;
+				white-space: pre;
+				resize: vertical;
+				padding: 1em;
+				border: 1px solid rgba(100, 116, 139, 0.3);
+				border-radius: 10px;
+				background: #0d1117;
+				color: #c9d1d9;
+				box-shadow:
+					inset 0 2px 4px rgba(0, 0, 0, 0.3),
+					0 2px 4px rgba(0, 0, 0, 0.2);
+				overflow-x: auto;
+				overflow-y: auto;
+				tab-size: 4;
+				transition: all 0.2s ease;
+				word-wrap: break-word;
+				overflow-wrap: break-word;
+			}
+
+			#codeText:focus {
+				outline: none;
+				border-color: #60a5fa;
+				box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Path Jerry to EZ Template</h1>
+		<div id="config">
+			<h3 id="configToggle">Configuration <span class="chevron"></span></h3>
+			<div id="configContent">
+				<div class="config-row">
+					<label class="config-label" for="drivetrainName">Drivetrain Name:</label>
+					<input type="text" id="drivetrainName" class="config-input" value="drivetrain" />
+				</div>
+				<div class="config-row">
+					<label class="config-label" for="defaultSpeed">Default Speed:</label>
+					<select id="defaultSpeed" class="config-select">
+						<option value="DRIVE_SPEED">DRIVE_SPEED</option>
+						<option value="SLOW_DRIVE_SPEED">SLOW_DRIVE_SPEED</option>
+						<option value="TURN_SPEED">TURN_SPEED</option>
+					</select>
+				</div>
+				<div class="config-row">
+					<label class="config-label" for="defaultDirection">Default Direction:</label>
+					<select id="defaultDirection" class="config-select">
+						<option value="fwd">fwd</option>
+						<option value="rev">rev</option>
+					</select>
+				</div>
+				<div class="config-row">
+					<label class="config-label" for="functionName">Function Name:</label>
+					<input type="text" id="functionName" class="config-input" value="auton" />
+				</div>
+			</div>
+		</div>
+		<div class="button-group">
+			<button id="getNodes">Get Path Nodes</button>
+			<button id="loadNodes">Load Nodes to Website</button>
+			<button id="clearStorage">Clear Storage</button>
+			<button id="run">Copy Code to Clipboard</button>
+		</div>
+		<div id="container">
+			<div id="output"></div>
+			<div id="codeDisplay" style="display: none">
+				<h3>Generated Code:</h3>
+				<textarea id="codeText" readonly></textarea>
+			</div>
+		</div>
 	</body>
+	<script>
+		document.getElementById('configToggle')?.addEventListener('click', () => {
+			document.getElementById('config')?.classList.toggle('collapsed');
+		});
+	</script>
 	<script src="popup.js"></script>
 </html>
