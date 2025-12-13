@@ -11,7 +11,7 @@ void autonomous() {
 	// drive_forward();
 	// turn_right();
 
-	ez::as::auton_selector.selected_auton_call();
+	// ez::as::auton_selector.selected_auton_call();
 }
 
 void defaultAutonConstants() {
@@ -55,41 +55,41 @@ void defaultAutonConstants() {
 }
 
 void base() {
-	chassis::drivetrain.odom_xyt_set(-61_in, -24.53_in, 270_deg);
-
-	chassis::drivetrain.pid_odom_set(
-		{
-			{{-26.66_in, -25.665_in, 225_deg}, rev, DRIVE_SPEED},
-			{{-24.868_in, -43.17_in, 164_deg}, fwd, SLOW_DRIVE_SPEED},
-			{{-17.414_in, -29.22_in, 0_deg}, fwd, DRIVE_SPEED},
-			{{-14.723_in, -11.338_in, 0_deg}, fwd, DRIVE_SPEED},
-		},
-		true);
-
-	int currentIndex = 0;
-
-	chassis::drivetrain.pid_wait_until_index(currentIndex++);  // 0
-	chassis::drivetrain.pid_wait_until_index(currentIndex++);  // 1
-	chassis::drivetrain.pid_wait_until_index(currentIndex++);  // 2
-	chassis::drivetrain.pid_wait_until_index(currentIndex++);  // 3
-
-	chassis::drivetrain.pid_wait();
+	// chassis::drivetrain.odom_xyt_set(-61_in, -24.53_in, 270_deg);
+	//
+	// chassis::drivetrain.pid_odom_set(
+	// 	{
+	// 		{{-26.66_in, -25.665_in, 225_deg}, rev, DRIVE_SPEED},
+	// 		{{-24.868_in, -43.17_in, 164_deg}, fwd, SLOW_DRIVE_SPEED},
+	// 		{{-17.414_in, -29.22_in, 0_deg}, fwd, DRIVE_SPEED},
+	// 		{{-14.723_in, -11.338_in, 0_deg}, fwd, DRIVE_SPEED},
+	// 	},
+	// 	true);
+	//
+	// int currentIndex = 0;
+	//
+	// chassis::drivetrain.pid_wait_until_index(currentIndex++);  // 0
+	// chassis::drivetrain.pid_wait_until_index(currentIndex++);  // 1
+	// chassis::drivetrain.pid_wait_until_index(currentIndex++);  // 2
+	// chassis::drivetrain.pid_wait_until_index(currentIndex++);  // 3
+	//
+	// chassis::drivetrain.pid_wait();
 }
 
 void driveForward() {
-	chassis::drivetrain.odom_xyt_set(0_in, 0_in, 0_deg);
-	chassis::drivetrain.pid_odom_set(
-		{
-			{{24.00_in, 0_in, 0_deg}, fwd, DRIVE_SPEED},
-		},
-		true);
+	// chassis::drivetrain.odom_xyt_set(0_in, 0_in, 0_deg);
+	// chassis::drivetrain.pid_odom_set(
+	// 	{
+	// 		{{24.00_in, 0_in, 0_deg}, fwd, DRIVE_SPEED},
+	// 	},
+	// 	true);
 }
 
 void turnRight() {
-	chassis::drivetrain.odom_xyt_set(0_in, 0_in, 0_deg);
-	chassis::drivetrain.pid_odom_set(
-		{
-			{{0_in, 0_in, 90_deg}, fwd, TURN_SPEED},
-		},
-		true);
+	// chassis::drivetrain.odom_xyt_set(0_in, 0_in, 0_deg);
+	// chassis::drivetrain.pid_odom_set(
+	// 	{
+	// 		{{0_in, 0_in, 90_deg}, fwd, TURN_SPEED},
+	// 	},
+	// 	true);
 }
