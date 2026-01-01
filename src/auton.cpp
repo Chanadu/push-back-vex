@@ -54,6 +54,20 @@ void defaultAutonConstants() {
 	chassis::drivetrain.pid_angle_behavior_set(ez::shortest);
 }
 
+void auton() {
+	chassis::drivetrain.odom_xyt_set(-28.292_in, -18.024_in, 90_deg);
+
+	chassis::drivetrain.pid_odom_set(
+		{
+			{{-60.812_in, -18.024_in, 90_deg}, fwd, DRIVE_SPEED},
+		},
+		true);
+
+	int currentIndex = 0;
+	chassis::drivetrain.pid_wait_until_index(1);
+	chassis::drivetrain.pid_wait();
+}
+
 void base() {
 	// chassis::drivetrain.odom_xyt_set(-61_in, -24.53_in, 270_deg);
 	//

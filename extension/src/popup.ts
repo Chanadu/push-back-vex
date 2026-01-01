@@ -301,7 +301,7 @@ function getCurrentCode(): string {
 		direction: undefined,
 		pos: pathNodes[0],
 	});
-	for (let i = 1; i <= pathNodes.length - 1; i++) {
+	for (let i = 1; i <= pathNodes.length - 2; i++) {
 		const from = i;
 		const to = i + 1;
 		const idBase = `node-${from}-to-${to}`;
@@ -381,9 +381,7 @@ function createCode(pathNodes: NodeData[]): string {
 		);
 	}
 
-	code.push(`\t},`, `\ttrue);`, ``, `int currentIndex = 0;`);
-
-	for (let i = 1; i < pathNodes.length; i++) {
+	for (let i = 0; i < pathNodes.length - 1; i++) {
 		code.push(`${chassisName}.pid_wait_until_index(${i});`);
 	}
 	code.push(`${chassisName}.pid_wait();`);
