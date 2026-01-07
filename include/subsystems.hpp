@@ -7,7 +7,7 @@ namespace chassis {
 		const std::uint8_t imu = 10;
 		const std::uint8_t radio = 20;
 
-		const std::vector<int> driveLeft = {-11, -6, 5};
+		const std::vector<int> driveLeft = {-15, -6, 5};
 		const std::vector<int> driveRight = {18, 8, -7};
 
 		const std::uint8_t top = 19;

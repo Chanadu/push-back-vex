@@ -18,16 +18,16 @@ void initialize() {
 	defaultAutonConstants();
 
 	ez::as::auton_selector.autons_add({
-		{"Drive Forward 2ft", driveForward},
-		{"Turn Right 90 Degrees", turnRight},
-		{"Run 'Base' Auton", base},
+		// {"Drive Forward 2ft", driveForward},
+		// {"Turn Right 90 Degrees", turnRight},
+		// {"Run 'Base' Auton", base},
+		{"Auton", auton},
 	});
 
 	chassis::drivetrain.initialize();
+	setupMotors();
 	ez::as::initialize();
 	master.rumble(chassis::drivetrain.drive_imu_calibrated() ? "." : "-------");
-
-	setupMotors();
 }
 
 void disabled() {}

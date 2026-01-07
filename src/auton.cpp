@@ -1,5 +1,6 @@
 #include "auton.hpp"
 #include "main.h"
+#include "subsystems.hpp"
 
 void autonomous() {
 	chassis::drivetrain.pid_targets_reset();
@@ -10,12 +11,13 @@ void autonomous() {
 
 	// drive_forward();
 	// turn_right();
-
+	pros::delay(500);
+	auton();
 	// ez::as::auton_selector.selected_auton_call();
 }
 
 void defaultAutonConstants() {
-	chassis::drivetrain.pid_drive_constants_set(20.0, 0.0, 100.0);		   // Fwd/rev constants, used for odom and non odom motions
+	chassis::drivetrain.pid_drive_constants_set(15, 10.0, 5.0);			   // Fwd/rev constants, used for odom and non odom motions
 	chassis::drivetrain.pid_heading_constants_set(11.0, 0.0, 20.0);		   // Holds the robot straight while going forward without odom
 	chassis::drivetrain.pid_turn_constants_set(3.0, 0.05, 20.0, 15.0);	   // Turn in place constants
 	chassis::drivetrain.pid_swing_constants_set(6.0, 0.0, 65.0);		   // Swing constants
@@ -55,16 +57,44 @@ void defaultAutonConstants() {
 }
 
 void auton() {
-	chassis::drivetrain.odom_xyt_set(-28.292_in, -18.024_in, 90_deg);
+	chassis::drivetrain.odom_xyt_set(-61.435_in, -18.354_in, 90_deg);
 
 	chassis::drivetrain.pid_odom_set(
 		{
-			{{-60.812_in, -18.024_in, 90_deg}, fwd, DRIVE_SPEED},
+			{{-46.207_in, -18.354_in, 90_deg}, fwd, DRIVE_SPEED},
+			{{-42.002_in, -44.943_in, 45_deg}, fwd, DRIVE_SPEED},
+			{{-14.889_in, -16.391_in, 45_deg}, fwd, SLOW_DRIVE_SPEED},
+			{{-44.06_in, -47.846_in, 45_deg}, rev, DRIVE_SPEED},
+			{{-44.06_in, -49.5_in, 270_deg}, rev, SLOW_DRIVE_SPEED},
+			{{-23.236_in, -49.5_in, 270_deg}, rev, SLOW_DRIVE_SPEED},
 		},
 		true);
 
-	int currentIndex = 0;
+	chassis::drivetrain.pid_wait_until_index(0);
 	chassis::drivetrain.pid_wait_until_index(1);
+
+	chassis::conveyor.motor.move(-1 * chassis::conveyor.defaultSpeed);
+
+	chassis::drivetrain.pid_wait_until_index(2);
+
+	chassis::drivetrain.pid_wait_until_index(3);
+	chassis::drivetrain.pid_wait_until_index(4);
+	chassis::holder.piston.extend();
+	chassis::drivetrain.pid_wait_until_index(5);
+	chassis::top.motor.move(chassis::top.defaultSpeed * chassis::top.slowFactor);
+	for (int i = 0; i < 4; i++) {
+		chassis::conveyor.motor.move(chassis::conveyor.defaultSpeed);
+		pros::delay(150);
+		chassis::conveyor.motor.move(-1 * chassis::conveyor.defaultSpeed);
+		pros::delay(400);
+	}
+	chassis::conveyor.motor.move(-1 * chassis::conveyor.defaultSpeed);
+	pros::delay(3000);
+	chassis::drivetrain.pid_wait();
+
+	chassis::conveyor.motor.move(0);
+	chassis::top.motor.move(0);
+	chassis::holder.piston.retract();
 	chassis::drivetrain.pid_wait();
 }
 
