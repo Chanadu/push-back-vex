@@ -63,7 +63,6 @@ void autonActions() {
 	chassis::conveyor.motor.move(-1 * chassis::conveyor.defaultSpeed);
 
 	chassis::drivetrain.pid_wait_until_index(2);
-
 	chassis::drivetrain.pid_wait_until_index(3);
 	chassis::drivetrain.pid_wait_until_index(4);
 	chassis::holder.piston.extend();
@@ -77,12 +76,11 @@ void autonActions() {
 	// }
 	chassis::conveyor.motor.move(-1 * chassis::conveyor.defaultSpeed);
 	pros::delay(3000);
-	chassis::drivetrain.pid_wait();
+	chassis::drivetrain.pid_wait_quick();
 
 	chassis::conveyor.motor.move(0);
 	chassis::top.motor.move(0);
 	chassis::holder.piston.retract();
-	chassis::drivetrain.pid_wait();
 }
 
 void rightAuton() {
