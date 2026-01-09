@@ -1,5 +1,6 @@
 #include "auton.hpp"
 #include "main.h"
+#include "okapi/api/units/QAngle.hpp"
 #include "subsystems.hpp"
 
 void autonomous() {
@@ -9,10 +10,9 @@ void autonomous() {
 
 	chassis::drivetrain.drive_brake_set(pros::E_MOTOR_BRAKE_HOLD);
 
-	// drive_forward();
-	// turn_right();
 	pros::delay(500);
-	auton();
+	rightAuton();
+	leftAuton();
 	// ez::as::auton_selector.selected_auton_call();
 }
 
@@ -56,7 +56,36 @@ void defaultAutonConstants() {
 	chassis::drivetrain.pid_angle_behavior_set(ez::shortest);
 }
 
-void auton() {
+void autonActions() {
+	chassis::drivetrain.pid_wait_until_index(0);
+	chassis::drivetrain.pid_wait_until_index(1);
+
+	chassis::conveyor.motor.move(-1 * chassis::conveyor.defaultSpeed);
+
+	chassis::drivetrain.pid_wait_until_index(2);
+
+	chassis::drivetrain.pid_wait_until_index(3);
+	chassis::drivetrain.pid_wait_until_index(4);
+	chassis::holder.piston.extend();
+	chassis::drivetrain.pid_wait_until_index(5);
+	chassis::top.motor.move(chassis::top.defaultSpeed * chassis::top.slowFactor);
+	// for (int i = 0; i < 4; i++) {
+	// 	chassis::conveyor.motor.move(chassis::conveyor.defaultSpeed);
+	// 	pros::delay(150);
+	// 	chassis::conveyor.motor.move(-1 * chassis::conveyor.defaultSpeed);
+	// 	pros::delay(400);
+	// }
+	chassis::conveyor.motor.move(-1 * chassis::conveyor.defaultSpeed);
+	pros::delay(3000);
+	chassis::drivetrain.pid_wait();
+
+	chassis::conveyor.motor.move(0);
+	chassis::top.motor.move(0);
+	chassis::holder.piston.retract();
+	chassis::drivetrain.pid_wait();
+}
+
+void rightAuton() {
 	chassis::drivetrain.odom_xyt_set(-61.435_in, -18.354_in, 90_deg);
 
 	chassis::drivetrain.pid_odom_set(
@@ -70,70 +99,32 @@ void auton() {
 		},
 		true);
 
-	chassis::drivetrain.pid_wait_until_index(0);
-	chassis::drivetrain.pid_wait_until_index(1);
-
-	chassis::conveyor.motor.move(-1 * chassis::conveyor.defaultSpeed);
-
-	chassis::drivetrain.pid_wait_until_index(2);
-
-	chassis::drivetrain.pid_wait_until_index(3);
-	chassis::drivetrain.pid_wait_until_index(4);
-	chassis::holder.piston.extend();
-	chassis::drivetrain.pid_wait_until_index(5);
-	chassis::top.motor.move(chassis::top.defaultSpeed * chassis::top.slowFactor);
-	for (int i = 0; i < 4; i++) {
-		chassis::conveyor.motor.move(chassis::conveyor.defaultSpeed);
-		pros::delay(150);
-		chassis::conveyor.motor.move(-1 * chassis::conveyor.defaultSpeed);
-		pros::delay(400);
-	}
-	chassis::conveyor.motor.move(-1 * chassis::conveyor.defaultSpeed);
-	pros::delay(3000);
-	chassis::drivetrain.pid_wait();
-
-	chassis::conveyor.motor.move(0);
-	chassis::top.motor.move(0);
-	chassis::holder.piston.retract();
-	chassis::drivetrain.pid_wait();
+		autonActions();
 }
 
-void base() {
-	// chassis::drivetrain.odom_xyt_set(-61_in, -24.53_in, 270_deg);
-	//
-	// chassis::drivetrain.pid_odom_set(
-	// 	{
-	// 		{{-26.66_in, -25.665_in, 225_deg}, rev, DRIVE_SPEED},
-	// 		{{-24.868_in, -43.17_in, 164_deg}, fwd, SLOW_DRIVE_SPEED},
-	// 		{{-17.414_in, -29.22_in, 0_deg}, fwd, DRIVE_SPEED},
-	// 		{{-14.723_in, -11.338_in, 0_deg}, fwd, DRIVE_SPEED},
-	// 	},
-	// 	true);
-	//
-	// int currentIndex = 0;
-	//
-	// chassis::drivetrain.pid_wait_until_index(currentIndex++);  // 0
-	// chassis::drivetrain.pid_wait_until_index(currentIndex++);  // 1
-	// chassis::drivetrain.pid_wait_until_index(currentIndex++);  // 2
-	// chassis::drivetrain.pid_wait_until_index(currentIndex++);  // 3
-	//
-	// chassis::drivetrain.pid_wait();
+// void leftAuton() {
+// 	chassis::drivetrain.odom_y_flip();
+// 	chassis::drivetrain.odom_theta_flip();
+// 	rightAuton();
+// }
+
+okapi::QAngle flipAngle(okapi::QAngle angle) {
+	return okapi::QAngle((double)((180 - (int)(angle.getValue()) + 360) % 360));
 }
 
-void driveForward() {
-	// chassis::drivetrain.odom_xyt_set(0_in, 0_in, 0_deg);
-	// chassis::drivetrain.pid_odom_set(
-	// 	{
-	// 		{{24.00_in, 0_in, 0_deg}, fwd, DRIVE_SPEED},
-	// 	},
-	// 	true);
-}
+void leftAuton() {
+	chassis::drivetrain.odom_xyt_set(-61.435_in, 18.354_in, 90_deg);
 
-void turnRight() {
-	// chassis::drivetrain.odom_xyt_set(0_in, 0_in, 0_deg);
-	// chassis::drivetrain.pid_odom_set(
-	// 	{
-	// 		{{0_in, 0_in, 90_deg}, fwd, TURN_SPEED},
-	// 	},
-	// 	true);
+	chassis::drivetrain.pid_odom_set(
+		{
+			{{-46.207_in, 18.354_in, flipAngle(90_deg)}, fwd, DRIVE_SPEED},
+			{{-42.002_in, 44.943_in, flipAngle(45_deg)}, fwd, DRIVE_SPEED},
+			{{-14.889_in, 16.391_in, flipAngle(45_deg)}, fwd, SLOW_DRIVE_SPEED},
+			{{-44.06_in, 47.846_in, flipAngle(45_deg)}, rev, DRIVE_SPEED},
+			{{-44.06_in, 49.5_in, flipAngle(270_deg)}, rev, SLOW_DRIVE_SPEED},
+			{{-23.236_in, 49.5_in, flipAngle(270_deg)}, rev, SLOW_DRIVE_SPEED},
+		},
+		true);
+
+	autonActions();
 }

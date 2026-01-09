@@ -9,9 +9,5 @@ constexpr int SWING_SPEED = 50;
 
 void defaultAutonConstants();
 
-void base();
-
-void driveForward();
-void turnRight();
-
-void auton();
+void rightAuton();
+void leftAuton();

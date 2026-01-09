@@ -21,7 +21,7 @@ void initialize() {
 		// {"Drive Forward 2ft", driveForward},
 		// {"Turn Right 90 Degrees", turnRight},
 		// {"Run 'Base' Auton", base},
-		{"Auton", auton},
+		{"Auton", rightAuton},
 	});
 
 	chassis::drivetrain.initialize();
