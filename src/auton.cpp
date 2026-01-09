@@ -2,6 +2,32 @@
 #include "main.h"
 #include "subsystems.hpp"
 
+
+// Background task to stop the conveyor after a fixed duration (milliseconds)
+static void conveyor_timer_task(void* param) {
+	// duration in ms is ignored; fixed 8000 ms
+	pros::delay(2500);
+	chassis::conveyor.motor.move(0);
+}
+
+void driveForward() {
+	chassis::drivetrain.odom_xyt_set(0_in, 0_in, 0_deg);
+
+	// Start the conveyor at its configured speed while the robot drives (inverted direction)
+	chassis::conveyor.motor.move(-chassis::conveyor.speed);
+
+	// Start a background task to stop the conveyor after 8 seconds total
+	new pros::Task(conveyor_timer_task, nullptr, "conveyor_timer");
+
+	// Drive forward using wheel-encoder PID with heading correction disabled
+	chassis::drivetrain.pid_drive_set(24.00_in, DRIVE_SPEED / 2, true, false);
+
+	// Wait until the PID motion completes before returning
+	chassis::drivetrain.pid_wait();
+
+	// NOTE: Do NOT stop the conveyor here — let the timer task stop it after 8 seconds
+}
+
 void autonomous() {
 	chassis::drivetrain.pid_targets_reset();
 	chassis::drivetrain.drive_imu_reset();
@@ -9,7 +35,10 @@ void autonomous() {
 
 	chassis::drivetrain.drive_brake_set(pros::E_MOTOR_BRAKE_HOLD);
 
-	// drive_forward();
+	// Shoot the holder piston out at the start of autonomous
+	chassis::holder.piston.extend();
+
+	driveForward();
 	// turn_right();
 	pros::delay(500);
 	auton();
@@ -120,14 +149,6 @@ void base() {
 	// chassis::drivetrain.pid_wait();
 }
 
-void driveForward() {
-	// chassis::drivetrain.odom_xyt_set(0_in, 0_in, 0_deg);
-	// chassis::drivetrain.pid_odom_set(
-	// 	{
-	// 		{{24.00_in, 0_in, 0_deg}, fwd, DRIVE_SPEED},
-	// 	},
-	// 	true);
-}
 
 void turnRight() {
 	// chassis::drivetrain.odom_xyt_set(0_in, 0_in, 0_deg);
